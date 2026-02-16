@@ -1,4 +1,4 @@
-import { FileQuestion, Settings } from "lucide-react";
+import { BookOpen, FileQuestion, Settings } from "lucide-react";
 
 export const SidebarData = [
     {
@@ -10,6 +10,11 @@ export const SidebarData = [
       title: "Problems",
       icon: FileQuestion,
       href: "/dashboard/problems",
+    },
+    {
+      title: "SDE Sheet",
+      icon: BookOpen,
+      href: "/dashboard/sde-sheet",
     },
   ];
   

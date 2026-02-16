@@ -32,29 +32,58 @@ model User {
   isVerified       Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  sdeProgress      UserSdeProgress[]
+  syncHistory      SyncHistory[]
 }
 
-// model leetcodeUser {
-//   id          String   @id @unique @default(uuid())
-//   username    String
-//   githubURL   String
-//   twitterUrl  String
-//   linkedinUrl String
-//   userAvatar  String
-//   countryName String
-//   skillTags   String[]
-//   starRating  Int
-//   badges      Badges[]
-// }
+enum ProblemStatus {
+  UNSOLVED
+  SOLVED
+  REVISIT
+}
 
-// model Badges {
-//   id             String        @id @unique @default(uuid())
-//   displayName    String
-//   icon           String
-//   creationDate   String
-//   leetcodeUserId String?
-//   leetcodeUser   leetcodeUser? @relation(fields: [leetcodeUserId], references: [id])
-// }
+model SdeSheetProblem {
+  id            String   @id @default(uuid())
+  category      String
+  problemName   String
+  titleSlug     String   @unique
+  leetcodeUrl   String?
+  gfgUrl        String?
+  youtubeUrl    String?
+  articleUrl    String?
+  difficulty    String?
+  orderIndex    Int      @default(0)
+  userProgress  UserSdeProgress[]
+  createdAt     DateTime @default(now())
+}
+
+model UserSdeProgress {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId       String
+  problem         SdeSheetProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  status          ProblemStatus @default(UNSOLVED)
+  solvedAt        DateTime?
+  language        String?
+  notes           String?       @db.Text
+  approach        String?       @db.Text
+  timeComplexity  String?
+  spaceComplexity String?
+  retryDate       DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  @@unique([userId, problemId])
+}
+
+model SyncHistory {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncedAt       DateTime @default(now())
+  problemsSynced Int      @default(0)
+}
+
 
 
 
